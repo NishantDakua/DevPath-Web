@@ -106,9 +106,15 @@ We welcome contributions from the community! Please read our [Contributing Guide
 
 We are committed to providing a friendly, safe, and welcoming environment for all. Please read and follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## 📄 License
+## 📄 License & Brand Protection
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under a custom **DevPath Source-Available License**. See the [LICENSE](LICENSE) file for full details.
+
+> [!WARNING]
+> **Important Licensing Terms:**
+> - You **may** clone, run, and modify this code locally to learn or submit contributions.
+> - You **may NOT** use this software for commercial purposes or host it publicly as a competing platform/clone.
+> - The **"DevPath"** name, logos, and brand identity are strictly copyrighted and trademarked. They cannot be used in derivative works without explicit permission.
 
 ---
 
