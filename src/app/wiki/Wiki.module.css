@@ -230,6 +230,8 @@
     padding: 0 1px;
     display: inline;
     font-style: normal;
+}
+
 .noResults {
     color: var(--text-secondary);
     font-size: 14px;
