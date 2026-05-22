@@ -107,7 +107,7 @@ export default function SignupPage() {
                     instagram,
                     role: 'member',
                     createdAt: serverTimestamp(),
-                    xp: 0,
+                    points: 0,
                     rank: 0,
                     streak: 0,
                     projects: 0
