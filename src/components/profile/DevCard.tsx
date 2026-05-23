@@ -148,7 +148,11 @@ export default function DevCard({ user }: { user: any }) {
     try {
       const { default: html2canvas } = await import('html2canvas');
       const canvas = await html2canvas(cardRef.current, {
-        scale: 2, useCORS: true, backgroundColor: null, logging: false,
+        scale: 2,
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: null,
+        logging: false,
       });
       const a = document.createElement('a');
       a.download = `devcard-${(user?.name ?? 'dev').replace(/\s+/g, '-')}.png`;
@@ -191,7 +195,16 @@ export default function DevCard({ user }: { user: any }) {
             <motion.div className={styles.avatarRing} variants={item}>
               <div className={styles.avatarRingInner} />
               {user?.photoURL ? (
-                <Image src={user.photoURL} alt={user?.name ?? 'Developer'} fill className={styles.avatar} unoptimized />
+                <Image
+                  src={user.photoURL}
+                  alt={user?.name ?? 'Developer'}
+                  fill
+                  className={styles.avatar}
+                  unoptimized
+                  crossOrigin="anonymous"
+                  referrerPolicy="no-referrer"
+                  loading="eager"
+                />
               ) : (
                 <div className={styles.avatarFallback}>{user?.name?.charAt(0)?.toUpperCase() ?? '?'}</div>
               )}
