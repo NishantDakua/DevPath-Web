@@ -102,6 +102,7 @@ export default function DevCard({ user }: { user: any }) {
   const [copied, setCopied]         = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [langMounted, setLangMounted] = useState(false);
+  const [avatarLoadFailed, setAvatarLoadFailed] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
@@ -142,10 +143,38 @@ export default function DevCard({ user }: { user: any }) {
     ? `${window.location.origin}/u?uid=${user?.uid}`
     : `devpath.in/u?uid=${user?.uid}`;
 
+  const waitForCardImages = async (root: HTMLElement) => {
+    const imgs = Array.from(root.querySelectorAll('img'));
+    await Promise.all(
+      imgs.map(async (img) => {
+        if (img.complete) return;
+        if (typeof img.decode === 'function') {
+          try {
+            await img.decode();
+            return;
+          } catch {
+            // Fallback to load/error listeners if decode rejects.
+          }
+        }
+
+        await new Promise<void>((resolve) => {
+          const done = () => {
+            img.removeEventListener('load', done);
+            img.removeEventListener('error', done);
+            resolve();
+          };
+          img.addEventListener('load', done, { once: true });
+          img.addEventListener('error', done, { once: true });
+        });
+      })
+    );
+  };
+
   const handleDownload = async () => {
     if (!cardRef.current || downloading) return;
     setDownloading(true);
     try {
+      await waitForCardImages(cardRef.current);
       const { default: html2canvas } = await import('html2canvas');
       const canvas = await html2canvas(cardRef.current, {
         scale: 2,
@@ -194,7 +223,7 @@ export default function DevCard({ user }: { user: any }) {
           <motion.div className={styles.leftPanel} variants={container} initial="hidden" animate="show">
             <motion.div className={styles.avatarRing} variants={item}>
               <div className={styles.avatarRingInner} />
-              {user?.photoURL ? (
+              {user?.photoURL && !avatarLoadFailed ? (
                 <Image
                   src={user.photoURL}
                   alt={user?.name ?? 'Developer'}
@@ -204,6 +233,7 @@ export default function DevCard({ user }: { user: any }) {
                   crossOrigin="anonymous"
                   referrerPolicy="no-referrer"
                   loading="eager"
+                  onError={() => setAvatarLoadFailed(true)}
                 />
               ) : (
                 <div className={styles.avatarFallback}>{user?.name?.charAt(0)?.toUpperCase() ?? '?'}</div>
